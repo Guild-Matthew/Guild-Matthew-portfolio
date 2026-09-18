@@ -1,0 +1,111 @@
+<div class="container py-6">
+
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div>
+      <p class="text-eyebrow mb-2">Your Library</p>
+      <h1>My Sets</h1>
+      <p class="text-muted mt-2" *ngIf="!loading">
+        {{ sets.length }} {{ sets.length === 1 ? 'set' : 'sets' }}
+      </p>
+    </div>
+    <div class="dashboard-actions">
+      <button class="btn btn-secondary btn-sm" (click)="toggleSelectionMode()">
+        {{ selectionMode ? 'Cancel' : 'Select' }}
+      </button>
+      <button *ngIf="selectionMode && selectedSets.size > 0"
+              class="btn btn-danger btn-sm"
+              (click)="deleteSelected()">
+        Delete ({{ selectedSets.size }})
+      </button>
+    </div>
+  </header>
+
+  <!-- Create set row -->
+  <div class="create-set-row">
+    <label for="newSetNameInput" class="visually-hidden">New set name</label>
+    <input id="newSetNameInput"
+           class="form-control create-set-input"
+           placeholder="Name your new set…"
+           [(ngModel)]="newSetName"
+           (keyup.enter)="createSet()">
+    <a class="btn btn-primary" routerLink="/create-set">
+      <span aria-hidden="true">＋</span> Create Set
+    </a>
+  </div>
+
+  <!-- Loading skeletons -->
+  <div *ngIf="loading" class="sets-grid">
+    <div class="skeleton skeleton-card" *ngFor="let i of [1,2,3,4]"></div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loading && sets.length === 0" class="empty-state animate-fade-in-up">
+    <div class="empty-illustration" aria-hidden="true">
+      <div class="empty-card-stack">
+        <div class="empty-card empty-card-1"></div>
+        <div class="empty-card empty-card-2"></div>
+        <div class="empty-card empty-card-3"></div>
+      </div>
+    </div>
+    <h2 class="mt-5">Start your first set</h2>
+    <p class="text-muted mt-2">Create a set of flashcards to study with Learn, Match, and Test.</p>
+    <a class="btn btn-primary btn-lg mt-4" routerLink="/create-set">＋ Create your first set</a>
+  </div>
+
+  <!-- Sets grid -->
+  <div *ngIf="!loading && sets.length > 0" class="sets-grid">
+    <article *ngFor="let set of sets"
+             class="set-card card-hoverable animate-fade-in-up">
+
+      <!-- Selection checkbox -->
+      <div *ngIf="selectionMode" class="set-select">
+        <input type="checkbox"
+               [id]="'set-' + set.id"
+               [checked]="selectedSets.has(set.id)"
+               (change)="toggleSetSelection(set.id, $event)"
+               title="Select this set">
+      </div>
+
+      <!-- Set body -->
+      <div class="set-body" (click)="!selectionMode && openSet(set.id)">
+        <div class="set-identity" [attr.data-gradient]="getSetGradientIndex(set)">
+          <span class="set-initials">{{ getSetInitials(set) }}</span>
+        </div>
+
+        <div class="set-info">
+          <h3 class="set-name">{{ set.name }}</h3>
+          <p class="set-meta">{{ set.cards.length }} cards</p>
+        </div>
+
+        <!-- Progress ring -->
+        <div class="set-progress">
+          <div class="progress-ring progress-ring-sm">
+            <svg viewBox="0 0 36 36">
+              <defs>
+                <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#6D5DFB"/>
+                  <stop offset="100%" stop-color="#8B7CFB"/>
+                </linearGradient>
+              </defs>
+              <circle class="progress-ring-track" cx="18" cy="18" r="15.9155" stroke-width="2.5"/>
+              <circle class="progress-ring-fill"
+                      cx="18" cy="18" r="15.9155"
+                      stroke-width="2.5"
+                      [attr.stroke-dasharray]="getProgressPercent(set) + ' ' + (100 - getProgressPercent(set))"
+                      stroke-dashoffset="25"/>
+            </svg>
+            <span class="progress-ring-text">{{ getProgressPercent(set) }}%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer actions -->
+      <div class="set-footer" *ngIf="!selectionMode">
+        <button class="btn btn-ghost btn-sm flex-grow-1" (click)="openSet(set.id)">
+          Open Set
+        </button>
+      </div>
+    </article>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+.card-label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  font-weight: 700;
+}
+.card-divider {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  margin: var(--space-3) 0;
+}
+.card-actions {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: var(--space-4);
+  margin-top: var(--space-4);
+  display: flex;
+  gap: var(--space-2);
+}
+.btn-delete {
+  color: var(--danger-500);
+  border-color: var(--border-default);
+}
+.btn-delete:hover {
+  background: var(--danger-500);
+  color: white;
+  border-color: var(--danger-500);
+}
+.card-text {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+}
+.card { overflow: hidden; }
+.card-body { overflow: hidden; }
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+}
+.btn-success { background: var(--success-500); color: white; }
+.btn-success:hover { background: var(--success-600); color: white; transform: translateY(-1px); }
+.btn-info { background: var(--brand-500); color: white; }
+.btn-info:hover { background: var(--brand-600); color: white; transform: translateY(-1px); }
+.btn-warning { background: var(--warning-500); color: white; }
+.btn-warning:hover { background: var(--warning-600); color: white; transform: translateY(-1px); }
+
+.home-button {
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+.home-button:hover {
+  background: var(--brand-50);
+  border-color: var(--brand-400);
+  color: var(--brand-600);
+}
+.home-icon { font-size: 1rem; }
+.upload-button { white-space: nowrap; min-width: 100px; }
+.card-col { margin-bottom: var(--space-4); }

@@ -1,0 +1,13 @@
+<nav class="navbar">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">{{ title() }}</a>
+    <ul class="navbar-nav">
+      <li>
+        <button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="'Switch to ' + (theme() === 'light' ? 'dark' : 'light') + ' mode'" title="Toggle theme">
+          {{ theme() === 'light' ? '🌙' : '☀️' }}
+        </button>
+      </li>
+    </ul>
+  </div>
+</nav>
+<router-outlet></router-outlet>

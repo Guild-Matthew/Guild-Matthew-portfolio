@@ -1,0 +1,36 @@
+<div class="container py-4">
+  <!-- Header with exit, progress, timer, reset -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center gap-3">
+      <button class="btn btn-outline-secondary" (click)="exitMatch()">✕ Exit</button>
+      <span class="badge bg-primary">{{ pairsMatched }} / {{ totalPairs }}</span>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <span class="h5 mb-0 timer">⏱️ {{ getTimeString() }}</span>
+      <button class="btn btn-outline-secondary btn-sm" (click)="resetGame()">Reset</button>
+    </div>
+  </div>
+
+  <!-- Match Grid -->
+  <div class="match-grid">
+    <div *ngFor="let tile of tiles" 
+         class="match-tile" 
+         [class.matched]="tile.matched"
+         [class.selected]="selectedTile?.id === tile.id"
+         [class.error]="isError && selectedTile?.id === tile.id"
+         (click)="onTileClick(tile)"
+         [class.hidden]="tile.matched">
+      {{ tile.text }}
+    </div>
+  </div>
+
+  <!-- Game Over Overlay -->
+  <div *ngIf="isGameOver" class="game-over-overlay">
+    <div class="game-over-card">
+      <h2 class="display-4 mb-3">🎉 All matched!</h2>
+      <p class="lead">Time: {{ getTimeString() }}</p>
+      <button class="btn btn-primary btn-lg" (click)="resetGame()">Play Again</button>
+      <button class="btn btn-outline-secondary mt-2" (click)="exitMatch()">Back to Set</button>
+    </div>
+  </div>
+</div>

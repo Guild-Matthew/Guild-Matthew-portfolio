@@ -1,0 +1,97 @@
+<div class="container py-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center gap-3">
+      <button class="btn btn-outline-secondary" (click)="goBack()">✕ Exit</button>
+      <span class="badge bg-primary">{{ questions.length }} questions</span>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <div *ngIf="timerEnabled && !isGraded" class="h5 mb-0 timer">
+        ⏱️ {{ getTimeString() }}
+      </div>
+      <button class="btn btn-primary" (click)="submitTest()" *ngIf="!isGraded">Submit</button>
+      <span *ngIf="isGraded" class="badge bg-success">{{ score }} / {{ total }}</span>
+    </div>
+  </div>
+
+  <!-- Questions -->
+  <div *ngFor="let q of questions; let i = index" class="question-card card mb-4 p-4">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+      <h5 class="mb-0">Question {{ i+1 }}</h5>
+      <span class="badge bg-secondary">{{ q.type | uppercase }}</span>
+    </div>
+
+    <!-- True/False – clickable label area -->
+    <div *ngIf="q.type === 'tf'">
+      <p class="lead">{{ q.statement }}</p>
+      <div class="tf-options">
+        <label class="tf-option">
+          <input type="radio" name="tf{{i}}" (change)="onTFChange(q, true)" [disabled]="isGraded" title="True" aria-label="True">
+          <span>True</span>
+        </label>
+        <label class="tf-option">
+          <input type="radio" name="tf{{i}}" (change)="onTFChange(q, false)" [disabled]="isGraded" title="False" aria-label="False">
+          <span>False</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Multiple Choice – clickable label area -->
+    <div *ngIf="q.type === 'mc'">
+      <p class="lead">{{ q.card.front }}</p>
+      <div class="mc-grid">
+        <label *ngFor="let opt of q.options; let idx = index" class="mc-option">
+          <input type="radio" name="mc{{i}}" [value]="opt" (change)="onMCChange(q, opt)" [disabled]="isGraded" [title]="opt" [aria-label]="opt">
+          <span>{{ opt }}</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Written -->
+    <div *ngIf="q.type === 'written'">
+      <p class="lead">{{ q.card.front }}</p>
+      <label class="form-label fw-semibold" [for]="'writtenInput' + i" title="Your answer">Your answer</label>
+      <input [id]="'writtenInput' + i" class="form-control" placeholder="Type your answer..." title="Type your answer" aria-label="Type your answer" (input)="onWrittenChange(q, $any($event.target).value)" [disabled]="isGraded">
+    </div>
+
+    <!-- Match – dropdown -->
+    <div *ngIf="q.type === 'match' && q.matchPairs">
+      <div class="match-table">
+        <div class="match-row" *ngFor="let pair of q.matchPairs; let idx = index">
+          <span class="match-term">{{ idx + 1 }}. {{ pair.term }}</span>
+          <span class="match-arrow">→</span>
+          <select class="form-select match-select" 
+                  [(ngModel)]="pair.userMatch" 
+                  [disabled]="isGraded" 
+                  title="Select matching definition">
+            <option value="">Select definition</option>
+            <option *ngFor="let def of q.matchPairs" [value]="def.definition">{{ def.definition }}</option>
+          </select>
+        </div>
+      </div>
+      <small class="text-muted mt-2 d-block">Select the definition that matches each term.</small>
+    </div>
+
+    <!-- Feedback -->
+    <div *ngIf="isGraded" class="mt-3 feedback">
+      <span *ngIf="q.isCorrect" class="text-success">✅ Correct</span>
+      <span *ngIf="!q.isCorrect" class="text-danger">❌ Incorrect – correct answer: 
+        <span *ngIf="q.type === 'tf'">
+          {{ q.correctAnswer === 'true' ? 'True' : 'False' }}
+        </span>
+        <span *ngIf="q.type === 'mc' || q.type === 'written'">{{ q.card.back }}</span>
+        <span *ngIf="q.type === 'match'">(match all correctly)</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div *ngIf="isGraded" class="text-center py-4">
+    <h2 class="display-4">🎉 Test completed!</h2>
+    <p class="lead">You scored <strong>{{ score }}</strong> out of <strong>{{ total }}</strong>.</p>
+    <div class="d-flex justify-content-center gap-3 mt-4">
+      <button class="btn btn-primary" (click)="restart()">🔄 New test</button>
+      <button class="btn btn-outline-secondary" (click)="goBack()">🏠 Back to set</button>
+    </div>
+  </div>
+</div>
