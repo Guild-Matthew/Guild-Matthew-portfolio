@@ -1,5 +1,7 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import * as Tone from 'tone';
+import { ProjectStore } from '../state/project.store';
+import type { Project } from '../models/project.model';
 
 /**
  * Owns the Tone.js Transport. Framework-agnostic in spirit:
@@ -8,9 +10,12 @@ import * as Tone from 'tone';
  */
 @Injectable({ providedIn: 'root' })
 export class TransportService {
+  private readonly projectStore = inject(ProjectStore);
+
   private readonly transport = Tone.getTransport();
   private metronomeSynth: Tone.MembraneSynth | null = null;
   private metronomeEventId: number | null = null;
+  private lastAppliedProjectId: string | null = null;
 
   readonly bpm = signal(120);
   readonly isPlaying = signal(false);
@@ -40,15 +45,30 @@ export class TransportService {
     this.transport.bpm.value = this.bpm();
     this.transport.timeSignature = this.timeSignature()[0];
 
-    // Update the position signal on every 16th note — cheap, and gives
-    // smooth-enough playhead motion for Stage 1.
+    // Update the position signal on every 16th note.
     this.transport.scheduleRepeat(() => {
       this.positionBeats.set(this.transport.ticks / this.transport.PPQ);
     }, '16n');
+
+    // Whenever a *different* project becomes current, apply its tempo
+    // and time signature to the Tone.js transport.
+    effect(() => {
+      const project = this.projectStore.currentProject();
+      if (!project) return;
+      if (project.id === this.lastAppliedProjectId) return;
+      this.lastAppliedProjectId = project.id;
+      this.applyProjectToTransport(project);
+    });
+  }
+
+  private applyProjectToTransport(project: Project): void {
+    this.bpm.set(project.bpm);
+    this.transport.bpm.value = project.bpm;
+    this.timeSignature.set(project.timeSignature);
+    this.transport.timeSignature = project.timeSignature[0];
   }
 
   async play(): Promise<void> {
-    // Must be resumed from a user gesture (browser autoplay policy).
     await Tone.start();
     this.transport.start();
     this.isPlaying.set(true);
@@ -70,11 +90,13 @@ export class TransportService {
     const clamped = Math.max(20, Math.min(300, Math.round(bpm)));
     this.bpm.set(clamped);
     this.transport.bpm.value = clamped;
+    this.projectStore.setBpm(clamped);
   }
 
   setTimeSignature(sig: [number, number]): void {
     this.timeSignature.set(sig);
     this.transport.timeSignature = sig[0];
+    this.projectStore.setTimeSignature(sig);
   }
 
   toggleMetronome(): void {
