@@ -1,0 +1,121 @@
+<div class="learn-wrap" *ngIf="!isComplete; else resultScreen">
+
+  <!-- Minimal top bar -->
+  <header class="learn-topbar">
+    <button class="btn btn-ghost btn-sm" (click)="goBack()">← Exit</button>
+    <div class="learn-progress-info">
+      <span class="badge">{{ answeredCount }} answered · {{ accuracy }}% accuracy</span>
+    </div>
+    <div class="learn-stats">
+      <span class="stat-dot stat-mastered">{{ roundMastered }} ✓</span>
+    </div>
+  </header>
+
+  <!-- The question card -->
+  <div class="learn-stage" *ngIf="currentQuestion as q">
+    <div class="flashcard-container"
+         [class.flipped]="q.type === 'written' && isAnswered">
+      <div class="flashcard-face question-face">
+
+        <span class="flashcard-label">
+          {{ q.type === 'mc' ? 'Choose the correct definition' : 'Type the definition' }}
+        </span>
+
+        <h2 class="flashcard-text">{{ q.card.front }}</h2>
+
+        <!-- Multiple choice -->
+        <div *ngIf="q.type === 'mc'" class="learn-mc-grid">
+          <button *ngFor="let opt of q.options"
+                  class="mc-option"
+                  [class.selected]="selectedOption === opt"
+                  [class.correct]="isAnswered && opt === q.correctAnswer"
+                  [class.wrong]="isAnswered && selectedOption === opt && opt !== q.correctAnswer"
+                  [disabled]="isAnswered"
+                  (click)="selectOption(opt)">
+            {{ opt }}
+          </button>
+        </div>
+
+        <!-- Written -->
+        <div *ngIf="q.type === 'written'" class="learn-written">
+          <input type="text"
+                 class="form-control"
+                 placeholder="Type your answer…"
+                 [(ngModel)]="writtenAnswer"
+                 [disabled]="isAnswered"
+                 (keyup.enter)="submitWritten()"
+                 title="Type the definition">
+        </div>
+
+        <!-- Feedback banner -->
+        <div *ngIf="isAnswered" class="feedback-banner"
+             [class.feedback-good]="wasCorrect"
+             [class.feedback-bad]="!wasCorrect">
+          <span *ngIf="wasCorrect">✓ Correct!</span>
+          <span *ngIf="!wasCorrect">
+            ✗ Correct answer: <strong>{{ q.correctAnswer }}</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="learn-actions">
+      <button *ngIf="q.type === 'mc' && !isAnswered"
+              class="btn btn-primary btn-lg"
+              [disabled]="!selectedOption"
+              (click)="submitMC()">
+        Check
+      </button>
+      <button *ngIf="q.type === 'written' && !isAnswered"
+              class="btn btn-primary btn-lg"
+              [disabled]="!writtenAnswer.trim()"
+              (click)="submitWritten()">
+        Check
+      </button>
+      <button *ngIf="isAnswered"
+              class="btn btn-primary btn-lg"
+              (click)="next()">
+        Continue →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Celebration -->
+<ng-template #resultScreen>
+  <div class="celebrate-wrap">
+    <div class="confetti" aria-hidden="true">
+      <div class="confetti-piece" *ngFor="let c of confettiPieces"
+           [style.left.%]="c.left"
+           [style.background]="c.color"
+           [style.animation-delay]="c.delay + 'ms'"></div>
+    </div>
+
+    <div class="celebrate-card animate-fade-in-up">
+      <div class="celebrate-check animate-check-pulse">✓</div>
+      <h1 class="mt-4">Session complete!</h1>
+      <p class="text-muted mt-2">Great work — here's how you did.</p>
+
+      <div class="celebrate-stats">
+        <div class="celebrate-stat">
+          <span class="celebrate-stat-value">{{ roundMastered }}</span>
+          <span class="celebrate-stat-label">Mastered</span>
+        </div>
+        <div class="celebrate-stat">
+          <span class="celebrate-stat-value">{{ roundCorrect }}</span>
+          <span class="celebrate-stat-label">Correct</span>
+        </div>
+        <div class="celebrate-stat">
+          <span class="celebrate-stat-value">{{ accuracy }}%</span>
+          <span class="celebrate-stat-label">Accuracy</span>
+        </div>
+      </div>
+
+      <div class="celebrate-actions">
+        <button class="btn btn-primary btn-lg" (click)="restart()">Review Again</button>
+        <button class="btn btn-secondary btn-lg" (click)="goBack()">Back to Set</button>
+      </div>
+    </div>
+  </div>
+</ng-template>

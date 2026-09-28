@@ -1,0 +1,19 @@
+<div class="container py-5">
+  <div class="card edit-card-container">
+    <h3 class="mb-4">✏️ Edit Card</h3>
+    <div class="mb-3">
+      <label for="editFront" class="form-label">Front</label>
+      <input id="editFront" class="form-control" [(ngModel)]="card.front" placeholder="Question">
+    </div>
+    <div class="mb-4">
+      <label for="editBack" class="form-label">Back</label>
+      <input id="editBack" class="form-control" [(ngModel)]="card.back" placeholder="Answer">
+    </div>
+    <div class="d-flex gap-3">
+      <button class="btn btn-primary" (click)="save()">
+        ✓ Save
+      </button>
+      <button class="btn btn-outline" (click)="cancel()">Cancel</button>
+    </div>
+  </div>
+</div>

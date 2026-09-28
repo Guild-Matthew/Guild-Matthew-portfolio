@@ -1,16 +1,16 @@
-## Hi there 👋
+# Guild-Matthew Portfolio
 
-<!--
-**Guild-Matthew/Guild-Matthew** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+A collection of personal projects by Matthew Guild.
 
-Here are some ideas to get you started:
+## Projects
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+### Flashcard Studio
+Browser-based flashcard learning app.
+Generated with [Angular CLI](https://github.com/angular/angular-cli) v21.
+
+### Music Studio
+Browser-based DAW — multi-track timeline, piano roll, step sequencer,
+vocal recording, exports to WAV/MIDI/notation. Built with Angular + Tone.js.
+
+## Contact
+- GitHub: [@Guild-Matthew](https://github.com/Guild-Matthew)

@@ -1,0 +1,42 @@
+<div class="container py-5">
+  <div class="test-setup-card">
+    <h3 class="mb-4">📝 Set up your test</h3>
+
+    <div class="row g-4 mb-4">
+      <div class="col-md-6">
+        <label for="questionCount" class="form-label fw-semibold">Questions (max {{ maxCards }})</label>
+        <input id="questionCount" type="number" class="form-control" [(ngModel)]="questionCount" min="1" [max]="maxCards" placeholder="Number of questions" title="Number of questions">
+      </div>
+      <div class="col-md-6">
+        <label for="timerMinutes" class="form-label fw-semibold">Timer (minutes)</label>
+        <input id="timerMinutes" type="number" class="form-control" [(ngModel)]="timerMinutes" min="0" placeholder="Timer duration" title="Timer duration in minutes">
+        <small class="text-muted">0 = no timer</small>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold">Question types</label>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="includeTF" id="tf">
+        <label class="form-check-label" for="tf">True / False</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="includeMC" id="mc">
+        <label class="form-check-label" for="mc">Multiple choice</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="includeWritten" id="written">
+        <label class="form-check-label" for="written">Written</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="includeMatch" id="match">
+        <label class="form-check-label" for="match">Match</label>
+      </div>
+    </div>
+
+    <div class="d-flex gap-3">
+      <button class="btn btn-primary btn-lg flex-grow-1" (click)="startTest()">▶ Start test</button>
+      <button class="btn btn-outline-secondary btn-lg" (click)="goBack()">Cancel</button>
+    </div>
+  </div>
+</div>

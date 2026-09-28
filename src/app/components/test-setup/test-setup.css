@@ -1,0 +1,37 @@
+.test-setup-card {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--space-6);
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-subtle);
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-2);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: all var(--duration-fast) var(--ease-out);
+  cursor: pointer;
+  background: var(--bg-surface);
+}
+.form-check:hover {
+  border-color: var(--brand-400);
+  background: var(--brand-50);
+}
+.form-check-input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--brand-500);
+  cursor: pointer;
+}
+.form-check-label {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-primary);
+}
